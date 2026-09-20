@@ -3,442 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PULSE - Workout Tracker</title>
+  <title>2seung2workout</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .welcome-box {
+      text-align: center;
+      margin-top: 40px;
+      margin-bottom: 36px;
+    }
+    .welcome-emoji {
+      font-size: 3rem;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+    .welcome-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #2d2926;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+    .welcome-sub {
+      font-size: 0.95rem;
+      color: #8c827a;
+    }
+    .social-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      background-color: #fee500;
+      color: #191919;
+      font-weight: 600;
+      font-size: 0.92rem;
+      text-decoration: none;
+      margin-bottom: 12px;
+      border: none;
+    }
+  </style>
 </head>
 <body>
 
-  <main class="screen-frame">
-    <!-- 헤더 -->
-    <header class="top-nav">
-      <div class="brand-icon-wrap">
-        <div class="brand-logo-icon">
-          <!-- 번개 펄스 아이콘 -->
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-          </svg>
-        </div>
-        <h1 class="brand-title">PULSE</h1>
-      </div>
-      <div class="streak-badge">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2c1.1 0 2 .9 2 2 0 1.9-1.2 3.5-2.8 4.2C13.5 10 16 12.7 16 16c0 3.3-2.7 6-6 6s-6-2.7-6-6c0-3.9 3.2-7.1 7-7.9V4c0-1.1.9-2 2-2z"/>
-        </svg>
-        <span>4 DAYS</span>
-      </div>
-    </header>
-
-    <!-- 목표 카드 모듈 (단기 / 장기) -->
-    <section class="target-grid">
-      <div class="target-card short">
-        <div class="target-icon-box">
-          <!-- 과녁 타깃 아이콘 -->
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <circle cx="12" cy="12" r="6"></circle>
-            <circle cx="12" cy="12" r="2"></circle>
-          </svg>
-        </div>
-        <div class="target-info">
-          <div class="target-meta">Short-Term Goal</div>
-          <div class="target-title" id="short-goal-title">2달 동안 30분 조깅 주 4일 하기</div>
-        </div>
-        <button class="icon-edit-btn" onclick="openTargetModal('short')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 20h9"></path>
-            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-          </svg>
-        </button>
+  <div class="app-container">
+    <div class="content-area">
+      <div class="welcome-box">
+        <span class="welcome-emoji">💪🌱</span>
+        <h2 class="welcome-title">2seung2workout</h2>
+        <p class="welcome-sub">운동 직후 가볍게 남기고, 꾸준함을 모아봐요</p>
       </div>
 
-      <div class="target-card long">
-        <div class="target-icon-box">
-          <!-- 트로피 아이콘 -->
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"></path>
-            <path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"></path>
-            <path d="M4 22h16"></path>
-            <path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"></path>
-            <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path>
-          </svg>
+      <div class="card">
+        <div class="form-group">
+          <label class="form-label">이메일 계정</label>
+          <input type="email" class="input-text" placeholder="sample@email.com" value="workout_lover@gmail.com">
         </div>
-        <div class="target-info">
-          <div class="target-meta">Long-Term Goal</div>
-          <div class="target-title" id="long-goal-title">체지방 감량 및 지리산 종주 완주</div>
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label">비밀번호</label>
+          <input type="password" class="input-text" placeholder="비밀번호 입력" value="••••••••">
         </div>
-        <button class="icon-edit-btn" onclick="openTargetModal('long')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 20h9"></path>
-            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-          </svg>
-        </button>
-      </div>
-    </section>
-
-    <!-- 캘린더 모듈 -->
-    <section class="calendar-panel">
-      <div class="calendar-top">
-        <button class="cal-nav-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        </button>
-        <div class="month-label">SEPTEMBER 2026</div>
-        <button class="cal-nav-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </button>
+        <!-- 달력 메인 화면으로 이동 -->
+        <a href="calendar.html" class="btn-primary">로그인하기</a>
       </div>
 
-      <div class="calendar-grid">
-        <div class="weekday-header">
-          <span class="weekday-cell">S</span>
-          <span class="weekday-cell">M</span>
-          <span class="weekday-cell">T</span>
-          <span class="weekday-cell">W</span>
-          <span class="weekday-cell">T</span>
-          <span class="weekday-cell">F</span>
-          <span class="weekday-cell">S</span>
-        </div>
-
-        <!-- 2026년 9월 캘린더 -->
-        <span class="date-node blank"></span>
-        <span class="date-node blank"></span>
-        <span class="date-node" data-date="2026-09-01">1</span>
-        <span class="date-node" data-date="2026-09-02">2</span>
-        <span class="date-node" data-date="2026-09-03">3</span>
-        <span class="date-node" data-date="2026-09-04">4</span>
-        <span class="date-node" data-date="2026-09-05">5</span>
-
-        <span class="date-node" data-date="2026-09-06">6</span>
-        <span class="date-node" data-date="2026-09-07">7</span>
-        <span class="date-node" data-date="2026-09-08">8</span>
-        <span class="date-node" data-date="2026-09-09">9</span>
-        <span class="date-node" data-date="2026-09-10">10</span>
-        <span class="date-node" data-date="2026-09-11">11</span>
-        <span class="date-node" data-date="2026-09-12">12</span>
-
-        <span class="date-node" data-date="2026-09-13">13</span>
-        <span class="date-node" data-date="2026-09-14">14</span>
-        <span class="date-node" data-date="2026-09-15">15</span>
-
-        <!-- 16일 수영 -->
-        <span class="date-node" data-date="2026-09-16">
-          16
-          <svg class="cal-dot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 12c3-3 6 3 10 0s7 3 10 0"></path></svg>
-        </span>
-        <span class="date-node" data-date="2026-09-17">17</span>
-
-        <!-- 18일 웨이트 -->
-        <span class="date-node" data-date="2026-09-18">
-          18
-          <svg class="cal-dot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="6" y1="12" x2="18" y2="12"></line><line x1="6" y1="9" x2="6" y2="15"></line><line x1="18" y1="9" x2="18" y2="15"></line></svg>
-        </span>
-        <span class="date-node" data-date="2026-09-19">19</span>
-
-        <!-- 20일 러닝 (오늘) -->
-        <span class="date-node today active" data-date="2026-09-20">
-          20
-          <svg class="cal-dot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-        </span>
-        <span class="date-node" data-date="2026-09-21">21</span>
-        <span class="date-node" data-date="2026-09-22">22</span>
-        <span class="date-node" data-date="2026-09-23">23</span>
-        <span class="date-node" data-date="2026-09-24">24</span>
-        <span class="date-node" data-date="2026-09-25">25</span>
-        <span class="date-node" data-date="2026-09-26">26</span>
-
-        <span class="date-node" data-date="2026-09-27">27</span>
-        <span class="date-node" data-date="2026-09-28">28</span>
-        <span class="date-node" data-date="2026-09-29">29</span>
-        <span class="date-node" data-date="2026-09-30">30</span>
-      </div>
-    </section>
-
-    <!-- 하단 상세 기록 카드 -->
-    <section class="daily-feed">
-      <div class="feed-header">
-        <span class="feed-date" id="selected-label">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-          2026.09.20 (TODAY)
-        </span>
-      </div>
-      <div id="feed-content">
-        <div class="workout-pill-row">
-          <span class="workout-tag">
-            <div class="workout-tag-icon">
-              <!-- 러닝화 / 번개 아이콘 -->
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-            </div>
-            러닝
-          </span>
-          <span class="workout-time-badge">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            30 MIN
-          </span>
-        </div>
-        <p class="workout-notes">공원 4km 조깅 완료. 페이스 5'40" 유지, 호흡 안정적.</p>
-      </div>
-    </section>
-
-    <!-- 플로팅 액션 버튼 -->
-    <button class="fab" onclick="toggleSheet(true)">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-    </button>
-  </main>
-
-  <!-- 바텀시트: 기록 입력 모달 -->
-  <div class="backdrop" id="backdrop" onclick="toggleSheet(false)"></div>
-  <div class="sheet" id="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title-bar">
-      <h2 class="sheet-heading">LOG WORKOUT</h2>
-      <button class="close-x" onclick="toggleSheet(false)">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-      </button>
-    </div>
-
-    <!-- 날짜 -->
-    <div class="field-block">
-      <label class="field-label">Date</label>
-      <input type="date" id="form-date" class="custom-input" value="2026-09-20">
-    </div>
-
-    <!-- 아이콘 중심 종목 선택 -->
-    <div class="field-block">
-      <label class="field-label">Discipline</label>
-      <div class="icon-type-grid" id="type-grid">
-        <!-- 웨이트 -->
-        <div class="icon-choice-card selected" onclick="selectType(this, '웨이트')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <line x1="2" y1="12" x2="22" y2="12"></line>
-            <rect x="5" y="8" width="2" height="8" rx="1"></rect>
-            <rect x="17" y="8" width="2" height="8" rx="1"></rect>
-            <rect x="3" y="10" width="2" height="4" rx="1"></rect>
-            <rect x="19" y="10" width="2" height="4" rx="1"></rect>
-          </svg>
-          <span>웨이트</span>
-        </div>
-        <!-- 유산소 -->
-        <div class="icon-choice-card" onclick="selectType(this, '유산소')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-          </svg>
-          <span>유산소</span>
-        </div>
-        <!-- 수영 -->
-        <div class="icon-choice-card" onclick="selectType(this, '수영')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M2 10c3-3 6 3 10 0s7 3 10 0"></path>
-            <path d="M2 15c3-3 6 3 10 0s7 3 10 0"></path>
-          </svg>
-          <span>수영</span>
-        </div>
-        <!-- 러닝 -->
-        <div class="icon-choice-card" onclick="selectType(this, '러닝')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M4 17l6-2 4 4 6-2"></path>
-            <circle cx="16" cy="5" r="2"></circle>
-            <path d="M12 12l4-3 2 3"></path>
-          </svg>
-          <span>러닝</span>
-        </div>
-        <!-- 크로스핏 -->
-        <div class="icon-choice-card" onclick="selectType(this, '크로스핏')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-          </svg>
-          <span>크로스핏</span>
-        </div>
-        <!-- 등산 -->
-        <div class="icon-choice-card" onclick="selectType(this, '등산')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M3 20L10 6l5 9 3-4 3 9H3z"></path>
-          </svg>
-          <span>등산</span>
-        </div>
-      </div>
-      <input type="text" id="type-direct" class="custom-input" placeholder="기타 운동 직접 입력" style="margin-top: 8px;">
-    </div>
-
-    <!-- 운동 시간 단추 -->
-    <div class="field-block">
-      <label class="field-label">Target Time</label>
-      <div class="duration-segment-grid" id="duration-grid">
-        <div class="duration-chip selected" onclick="selectDuration(this, 30)">30M</div>
-        <div class="duration-chip" onclick="selectDuration(this, 60)">60M</div>
-        <div class="duration-chip" onclick="selectDuration(this, 90)">90M</div>
-        <div class="duration-chip" onclick="selectDuration(this, 120)">120M</div>
-      </div>
-      <div class="time-control-group">
-        <button class="btn-sub-step" onclick="adjustTime(-10)">-10M</button>
-        <button class="btn-sub-step" onclick="adjustTime(10)">+10M</button>
-        <span class="active-duration" id="duration-label">30 MIN</span>
-      </div>
-    </div>
-
-    <!-- 내용 메모 -->
-    <div class="field-block">
-      <label class="field-label">Session Notes</label>
-      <textarea id="form-memo" class="custom-input" placeholder="세트 수, 코스, 중량 등 상세 노트를 입력하세요"></textarea>
-    </div>
-
-    <div class="action-row">
-      <button class="ui-btn ghost" onclick="toggleSheet(false)">Cancel</button>
-      <button class="ui-btn primary" onclick="submitRecord()">Save Entry</button>
+      <a href="calendar.html" class="social-btn">카카오로 바로 시작하기</a>
+      <a href="calendar.html" class="btn-secondary">로그인 없이 달력 둘러보기</a>
     </div>
   </div>
 
-  <!-- 목표 수정 모달 -->
-  <div class="popup-dialog" id="target-modal">
-    <div class="sheet-title-bar">
-      <h3 class="sheet-heading" id="modal-target-title">EDIT GOAL</h3>
-      <button class="close-x" onclick="closeTargetModal()">✕</button>
-    </div>
-    <div class="field-block">
-      <input type="text" id="target-input-text" class="custom-input">
-    </div>
-    <div class="action-row" style="grid-template-columns: 1fr 1fr;">
-      <button class="ui-btn ghost" onclick="closeTargetModal()">Cancel</button>
-      <button class="ui-btn primary" onclick="saveTargetTitle()">Done</button>
-    </div>
-  </div>
-
-  <script>
-    const workoutDb = {
-      "2026-09-16": { type: "수영", time: "50 MIN", memo: "아침 자유 수영 1,200m 완료. 턴 인터벌 집중." },
-      "2026-09-18": { type: "웨이트", time: "60 MIN", memo: "하체 중심 트레이닝. 스쿼트 90kg 세트 완료." },
-      "2026-09-20": { type: "러닝", time: "30 MIN", memo: "공원 4km 조깅 완료. 페이스 5'40\" 유지, 호흡 안정적." }
-    };
-
-    let selectedDate = "2026-09-20";
-    let activeDuration = 30;
-    let chosenType = "웨이트";
-    let currentGoalTarget = 'short';
-
-    // 날짜 선택 이벤트
-    document.querySelectorAll('.date-node:not(.blank)').forEach(node => {
-      node.addEventListener('click', () => {
-        document.querySelectorAll('.date-node').forEach(n => n.classList.remove('active'));
-        node.classList.add('active');
-
-        const dateKey = node.getAttribute('data-date');
-        selectedDate = dateKey;
-        renderFeed(dateKey);
-      });
-    });
-
-    function renderFeed(dateKey) {
-      const parts = dateKey.split('-');
-      const label = document.getElementById('selected-label');
-      const feed = document.getElementById('feed-content');
-
-      const isToday = (dateKey === "2026-09-20") ? " (TODAY)" : "";
-      label.innerHTML = `
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-        ${parts[0]}.${parts[1]}.${parts[2]}${isToday}
-      `;
-
-      if (workoutDb[dateKey]) {
-        feed.innerHTML = `
-          <div class="workout-pill-row">
-            <span class="workout-tag">
-              <div class="workout-tag-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-              </div>
-              ${workoutDb[dateKey].type}
-            </span>
-            <span class="workout-time-badge">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-              ${workoutDb[dateKey].time}
-            </span>
-          </div>
-          <p class="workout-notes">${workoutDb[dateKey].memo}</p>
-        `;
-      } else {
-        feed.innerHTML = `<div class="feed-empty">No workouts recorded.<br>Tap + to log an activity.</div>`;
-      }
-    }
-
-    function toggleSheet(open) {
-      const backdrop = document.getElementById('backdrop');
-      const sheet = document.getElementById('sheet');
-      if (open) {
-        document.getElementById('form-date').value = selectedDate;
-        backdrop.classList.add('active');
-        sheet.classList.add('active');
-      } else {
-        backdrop.classList.remove('active');
-        sheet.classList.remove('active');
-      }
-    }
-
-    function selectType(el, typeName) {
-      document.querySelectorAll('#type-grid .icon-choice-card').forEach(b => b.classList.remove('selected'));
-      el.classList.add('selected');
-      chosenType = typeName;
-    }
-
-    function selectDuration(el, min) {
-      document.querySelectorAll('#duration-grid .duration-chip').forEach(b => b.classList.remove('selected'));
-      el.classList.add('selected');
-      activeDuration = min;
-      document.getElementById('duration-label').innerText = `${activeDuration} MIN`;
-    }
-
-    function adjustTime(amount) {
-      activeDuration = Math.max(10, activeDuration + amount);
-      document.getElementById('duration-label').innerText = `${activeDuration} MIN`;
-      document.querySelectorAll('#duration-grid .duration-chip').forEach(b => b.classList.remove('selected'));
-    }
-
-    function submitRecord() {
-      const date = document.getElementById('form-date').value;
-      const customType = document.getElementById('type-direct').value.trim();
-      const type = customType || chosenType;
-      const memo = document.getElementById('form-memo').value || "Routine completed.";
-
-      workoutDb[date] = {
-        type: type,
-        time: `${activeDuration} MIN`,
-        memo: memo
-      };
-
-      const dateNode = document.querySelector(`.date-node[data-date="${date}"]`);
-      if (dateNode && !dateNode.querySelector('.cal-dot-icon')) {
-        const svgIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        svgIcon.setAttribute("class", "cal-dot-icon");
-        svgIcon.setAttribute("viewBox", "0 0 24 24");
-        svgIcon.setAttribute("fill", "none");
-        svgIcon.setAttribute("stroke", "currentColor");
-        svgIcon.setAttribute("stroke-width", "2.5");
-        svgIcon.innerHTML = `<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>`;
-        dateNode.appendChild(svgIcon);
-      }
-
-      renderFeed(date);
-      toggleSheet(false);
-      document.getElementById('form-memo').value = '';
-      document.getElementById('type-direct').value = '';
-    }
-
-    function openTargetModal(type) {
-      currentGoalTarget = type;
-      const text = document.getElementById(`${type}-goal-title`).innerText;
-      document.getElementById('target-input-text').value = text;
-      document.getElementById('target-modal').classList.add('active');
-      document.getElementById('backdrop').classList.add('active');
-    }
-
-    function closeTargetModal() {
-      document.getElementById('target-modal').classList.remove('active');
-      document.getElementById('backdrop').classList.remove('active');
-    }
-
-    function saveTargetTitle() {
-      const val = document.getElementById('target-input-text').value.trim();
-      if (val) {
-        document.getElementById(`${currentGoalTarget}-goal-title`).innerText = val;
-      }
-      closeTargetModal();
-    }
-  </script>
 </body>
 </html>
