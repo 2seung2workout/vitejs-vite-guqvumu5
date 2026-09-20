@@ -191,15 +191,15 @@
       <div class="calendar-card">
         <div class="calendar-month-bar">
           <button type="button" class="month-nav-btn" onclick="changeMonth(-1)">&lt;</button>
-          <span id="calendarTitle">2026년 9월</span>
+          <span id="calendarTitle">월간 달력</span>
           <button type="button" class="month-nav-btn" onclick="changeMonth(1)">&gt;</button>
         </div>
         <div class="cal-grid" id="calendarDays">
-          <!-- 스크립트로 생성 -->
+          <!-- 스크립트로 날짜 생성 -->
         </div>
       </div>
 
-      <!-- 선택된 일자 운동 목록 -->
+      <!-- 선택된 날짜 운동 목록 -->
       <div class="card">
         <div class="daily-card-title" id="selectedDateTitle">운동 기록</div>
         <div id="recordList">
@@ -213,7 +213,8 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzmr5ybQpeF1FquhjwDkotDXTSLfta90jfDuP-tL28fWJEzgFOoi-XBg4xamYh3GIqQ/exec";
+    // 변경된 신규 웹 앱 배포 주소
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyKwazikG8IOsk2tcSBYErfY1IiEmKAfqsC0ftHxqL6LfFtTp9FCslz-D-RcGWx4Tyh/exec";
 
     let currentDate = new Date();
     let selectedDateStr = formatDateKey(currentDate);
@@ -226,7 +227,7 @@
       return `${y}-${m}-${d}`;
     }
 
-    // Google 스프레드시트에서 기록 불러오기 (GET)
+    // 구글 시트에서 전체 기록 가져오기 (GET)
     async function loadRecords() {
       try {
         const response = await fetch(SCRIPT_URL);
@@ -256,7 +257,6 @@
       const daysContainer = document.getElementById("calendarDays");
       daysContainer.innerHTML = "";
 
-      // 요일 헤더
       const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
       dayNames.forEach((name, idx) => {
         const col = document.createElement("div");
@@ -267,14 +267,12 @@
         daysContainer.appendChild(col);
       });
 
-      // 시작 빈칸
       for (let i = 0; i < firstDayIndex; i++) {
         const emptyCell = document.createElement("div");
         emptyCell.className = "cal-cell empty";
         daysContainer.appendChild(emptyCell);
       }
 
-      // 날짜 채우기
       for (let day = 1; day <= lastDay; day++) {
         const cell = document.createElement("div");
         cell.className = "cal-cell";
@@ -282,12 +280,10 @@
 
         const cellDateStr = `${year}-${("0" + (month + 1)).slice(-2)}-${("0" + day).slice(-2)}`;
 
-        // 오늘이나 선택된 날짜 강조
         if (cellDateStr === selectedDateStr) {
           cell.classList.add("selected");
         }
 
-        // 해당 날짜에 저장된 기록이 있으면 점 뱃지 추가
         const hasRecord = allRecords.some(r => r.date === cellDateStr);
         if (hasRecord) {
           const dot = document.createElement("div");
@@ -331,7 +327,6 @@
       renderCalendar();
     }
 
-    // 화면 시작 시 자동 호출
     loadRecords();
   </script>
 
