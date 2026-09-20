@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2seung2workout - 기록 작성</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <header class="app-header">
+      <h1>2seung2workout</h1>
+      <a href="calendar.html" class="header-link">취소</a>
+    </header>
+
+    <div class="content-area">
+      <!-- 1. 날짜 선택 -->
+      <div class="form-group">
+        <label class="form-label">날짜</label>
+        <input type="date" class="input-text" value="2026-09-20">
+      </div>
+
+      <!-- 2. 운동 종류 (단추형) -->
+      <div class="form-group">
+        <label class="form-label">운동 종류</label>
+        <div class="chip-group">
+          <button type="button" class="chip-btn active">웨이트</button>
+          <button type="button" class="chip-btn">유산소</button>
+          <button type="button" class="chip-btn">수영</button>
+          <button type="button" class="chip-btn">러닝</button>
+          <button type="button" class="chip-btn">크로스핏</button>
+          <button type="button" class="chip-btn">등산</button>
+          <button type="button" class="chip-btn">+ 직접입력</button>
+        </div>
+      </div>
+
+      <!-- 3. 운동 시간 (30분 단위 단추) -->
+      <div class="form-group">
+        <label class="form-label">운동 시간</label>
+        <div class="chip-group">
+          <button type="button" class="chip-btn">30분</button>
+          <button type="button" class="chip-btn active">1시간</button>
+          <button type="button" class="chip-btn">1시간 30분</button>
+          <button type="button" class="chip-btn">2시간</button>
+          <button type="button" class="chip-btn">2시간 30분 이상</button>
+        </div>
+      </div>
+
+      <!-- 4. 세부 내용 -->
+      <div class="form-group">
+        <label class="form-label">운동 내용 / 메모</label>
+        <textarea class="input-textarea" placeholder="루틴, 중량/세트, 오늘 몸 상태를 자유롭게 적어보세요.">스쿼트 5세트 완료. 날씨가 시원해서 평소보다 덜 지치고 집중이 잘 되었다.</textarea>
+      </div>
+
+      <!-- 달력으로 돌아가는 완료 버튼 -->
+      <a href="calendar.html" class="btn-primary">저장 완료 (미리보기)</a>
+    </div>
+  </div>
+
+</body>
+</html>

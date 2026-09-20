@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2seung2workout - 달력</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* 상단 목표 배너 */
+    .goal-card {
+      background: linear-gradient(135deg, #fff8f5 0%, #fff0eb 100%);
+      border: 1px solid #fcded6;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .goal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .goal-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: #e06d53;
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .goal-title {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: #38312c;
+      margin-bottom: 8px;
+    }
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: #fae4dc;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+    .progress-bar-fill {
+      width: 75%;
+      height: 100%;
+      background: #e06d53;
+      border-radius: 4px;
+    }
+    .goal-stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: #8c7b74;
+    }
+
+    /* 캘린더 그리드 */
+    .calendar-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid #f2eee8;
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+    .calendar-month-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      text-align: center;
+    }
+    .cal-header-day {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #a3988f;
+      padding-bottom: 8px;
+    }
+    .cal-cell {
+      height: 44px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #403a35;
+      position: relative;
+    }
+    .cal-cell.empty { color: #d0c8c0; }
+    .cal-cell.today {
+      background-color: #f7f3ee;
+      border: 1.5px solid #e06d53;
+      color: #e06d53;
+    }
+    .dot-badge {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background-color: #e06d53;
+      margin-top: 3px;
+    }
+    .dot-badge.weight { background-color: #e06d53; }
+    .dot-badge.run { background-color: #55a868; }
+
+    /* 하단 일자별 요약 카드 */
+    .daily-card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #453e37;
+    }
+    .record-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f8f4ee;
+    }
+    .record-item:last-child { border-bottom: none; }
+    .record-type-pill {
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: #fae4dc;
+      color: #c95137;
+      white-space: nowrap;
+    }
+    .record-body h4 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #2d2926;
+      margin-bottom: 3px;
+    }
+    .record-body p {
+      font-size: 0.82rem;
+      color: #7d736b;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- 헤더 -->
+    <header class="app-header">
+      <h1>2seung2workout</h1>
+      <a href="goals.html" class="header-link">목표 설정</a>
+    </header>
+
+    <div class="content-area">
+      <!-- 상단 목표 배너 카드 (단기 & 장기) -->
+      <div class="goal-card">
+        <div class="goal-header">
+          <span class="goal-tag">단기 목표</span>
+          <span style="font-size: 0.8rem; color: #8c7b74;">D-22</span>
+        </div>
+        <div class="goal-title">2달 동안 주 4일 30분 조깅 🏃</div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill"></div>
+        </div>
+        <div class="goal-stats">
+          <span>이번 주 3회 완료 / 4회 목표</span>
+          <span style="font-weight: 700; color: #e06d53;">75% 달성</span>
+        </div>
+      </div>
+
+      <!-- 월간 캘린더 예시 (9월 기준) -->
+      <div class="calendar-card">
+        <div class="calendar-month-bar">
+          <span style="cursor: pointer;">&lt;</span>
+          <span>9월</span>
+          <span style="cursor: pointer;">&gt;</span>
+        </div>
+        <div class="cal-grid">
+          <div class="cal-header-day" style="color: #d9534f;">일</div>
+          <div class="cal-header-day">월</div>
+          <div class="cal-header-day">화</div>
+          <div class="cal-header-day">수</div>
+          <div class="cal-header-day">목</div>
+          <div class="cal-header-day">금</div>
+          <div class="cal-header-day" style="color: #4a90e2;">토</div>
+
+          <!-- 1주차 -->
+          <div class="cal-cell empty">30</div>
+          <div class="cal-cell empty">31</div>
+          <div class="cal-cell">1</div>
+          <div class="cal-cell">2</div>
+          <div class="cal-cell">3</div>
+          <div class="cal-cell">4</div>
+          <div class="cal-cell">5</div>
+
+          <!-- 2주차 -->
+          <div class="cal-cell">6</div>
+          <div class="cal-cell">7</div>
+          <div class="cal-cell">8</div>
+          <div class="cal-cell">9</div>
+          <div class="cal-cell">10</div>
+          <div class="cal-cell">11</div>
+          <div class="cal-cell">12</div>
+
+          <!-- 3주차 (기록 예시) -->
+          <div class="cal-cell">13</div>
+          <div class="cal-cell">14<div class="dot-badge run"></div></div>
+          <div class="cal-cell">15</div>
+          <div class="cal-cell">16<div class="dot-badge weight"></div></div>
+          <div class="cal-cell">17</div>
+          <div class="cal-cell">18<div class="dot-badge run"></div></div>
+          <div class="cal-cell">19</div>
+
+          <!-- 4주차 (오늘 및 기록 예시) -->
+          <div class="cal-cell today">20<div class="dot-badge weight"></div></div>
+          <div class="cal-cell">21</div>
+          <div class="cal-cell">22</div>
+          <div class="cal-cell">23</div>
+          <div class="cal-cell">24</div>
+          <div class="cal-cell">25</div>
+          <div class="cal-cell">26</div>
+        </div>
+      </div>
+
+      <!-- 선택된 일자 운동 목록 (예시 2개 표시) -->
+      <div class="card">
+        <div class="daily-card-title">오늘(20일)의 운동 기록</div>
+        
+        <!-- 예시 1: 웨이트 트레이닝 -->
+        <div class="record-item">
+          <div class="record-type-pill">웨이트</div>
+          <div class="record-body">
+            <h4>1시간 소요</h4>
+            <p>하체 및 코어 집중 루틴 (스쿼트, 런지 세트 완료). 컨디션 좋음!</p>
+          </div>
+        </div>
+
+        <!-- 예시 2: 러닝/조깅 -->
+        <div class="record-item">
+          <div class="record-type-pill" style="background:#eaf6ed; color:#2d8847;">러닝</div>
+          <div class="record-body">
+            <h4>30분 소요</h4>
+            <p>공원 트랙 3km 가벼운 인터벌 조깅 마무리.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 운동 작성 화면으로 이동하는 + 버튼 -->
+    <a href="write.html" class="fab-btn" title="운동 기록하기">+</a>
+  </div>
+
+</body>
+</html>
