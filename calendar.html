@@ -180,12 +180,15 @@
 
   <div class="app-container">
     <header class="app-header">
-      <h1>2seung2workout</h1>
-      <a href="goals.html" class="header-link">목표 설정</a>
+      <h1 id="appTitle">2seung2workout</h1>
+      <div>
+        <a href="goals.html" class="header-link" style="margin-right: 10px;">목표 설정</a>
+        <a href="index.html" class="header-link" style="color: #8c827a; font-size: 0.8rem;">로그아웃</a>
+      </div>
     </header>
 
     <div class="content-area">
-      <!-- 상단 목표 배너 (클릭 시 목표 수정 화면으로 이동) -->
+      <!-- 상단 목표 배너 -->
       <div class="goal-card" onclick="location.href='goals.html'" title="누르면 목표를 수정할 수 있습니다">
         <div class="goal-header">
           <span class="goal-tag">단기 목표</span>
@@ -226,7 +229,7 @@
         <!-- 댓글 작성 폼 -->
         <div class="comment-form">
           <div class="comment-row">
-            <input type="text" id="commentAuthorInput" class="input-comment-author" placeholder="작성자" value="익명">
+            <input type="text" id="commentAuthorInput" class="input-comment-author" placeholder="작성자">
             <input type="text" id="commentTextInput" class="input-comment-text" placeholder="오늘 운동 응원이나 피드백을 남겨보세요!">
           </div>
           <button type="button" class="btn-comment-submit" id="commentSubmitBtn" onclick="submitComment()">댓글 등록</button>
@@ -244,7 +247,7 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVdFnwt-4KbG7JATKwgH3ySB_qVp3zAqxTk6cnlBAQDnQX-utjJtmGqqSPRGOH7frG/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx5BT5Ib11Ah0wLYxfiaBRYZ6UDzmSeUHXSDl7as0WpvAzZ0GH6mCBoseUakhfMFU-6/exec";
 
     let currentDate = new Date();
     let selectedDateStr = formatDateKey(currentDate);
@@ -259,6 +262,17 @@
 
     function goToWritePage() {
       window.location.href = `write.html?date=${selectedDateStr}`;
+    }
+
+    // 로그인 정보 불러와 닉네임 자동 세팅
+    function initUserHeader() {
+      const loggedUser = JSON.parse(localStorage.getItem("logged_in_user"));
+      if (loggedUser && loggedUser.nickname) {
+        document.getElementById("appTitle").innerText = `${loggedUser.nickname}의 운동 달력`;
+        document.getElementById("commentAuthorInput").value = loggedUser.nickname;
+      } else {
+        document.getElementById("commentAuthorInput").value = "익명";
+      }
     }
 
     function updateGoalBanner() {
@@ -319,7 +333,6 @@
       document.getElementById("goalProgressBar").style.width = `${percent}%`;
     }
 
-    // 1번째 시트: 전체 운동 기록 불러오기
     async function loadRecords() {
       try {
         const response = await fetch(SCRIPT_URL);
@@ -338,7 +351,6 @@
       }
     }
 
-    // 2번째 시트: 댓글 불러오기
     async function loadComments(dateStr) {
       const container = document.getElementById("commentList");
       container.innerHTML = '<div class="loading-notice">댓글을 불러오는 중입니다...</div>';
@@ -372,7 +384,6 @@
       }
     }
 
-    // 댓글 등록
     async function submitComment() {
       const authorInput = document.getElementById("commentAuthorInput");
       const textInput = document.getElementById("commentTextInput");
@@ -505,6 +516,7 @@
       renderCalendar();
     }
 
+    initUserHeader();
     updateGoalBanner();
     loadRecords();
     loadComments(selectedDateStr);

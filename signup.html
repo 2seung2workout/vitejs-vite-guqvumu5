@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2seung2workout - 회원가입</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .welcome-box {
+      text-align: center;
+      margin-top: 30px;
+      margin-bottom: 24px;
+    }
+    .welcome-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #2d2926;
+      margin-bottom: 6px;
+    }
+    .welcome-sub {
+      font-size: 0.9rem;
+      color: #8c827a;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <header class="app-header">
+      <h1>2seung2workout</h1>
+      <a href="index.html" class="header-link">로그인으로</a>
+    </header>
+
+    <div class="content-area">
+      <div class="welcome-box">
+        <h2 class="welcome-title">새 계정 만들기</h2>
+        <p class="welcome-sub">함께 운동 루틴을 기록하고 공유해요</p>
+      </div>
+
+      <div class="card">
+        <div class="form-group">
+          <label class="form-label">아이디 (이메일)</label>
+          <input type="email" id="signupEmail" class="input-text" placeholder="sample@email.com">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">비밀번호</label>
+          <input type="password" id="signupPassword" class="input-text" placeholder="비밀번호 입력">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">비밀번호 확인</label>
+          <input type="password" id="signupPasswordConfirm" class="input-text" placeholder="비밀번호 다시 입력">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label">닉네임</label>
+          <input type="text" id="signupNickname" class="input-text" placeholder="달력과 댓글에 표시될 이름">
+        </div>
+
+        <button type="button" class="btn-primary" id="signupBtn" onclick="handleSignup()">가입 완료하기</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx5BT5Ib11Ah0wLYxfiaBRYZ6UDzmSeUHXSDl7as0WpvAzZ0GH6mCBoseUakhfMFU-6/exec";
+
+    async function handleSignup() {
+      const email = document.getElementById("signupEmail").value.trim();
+      const password = document.getElementById("signupPassword").value.trim();
+      const passwordConfirm = document.getElementById("signupPasswordConfirm").value.trim();
+      const nickname = document.getElementById("signupNickname").value.trim();
+      const signupBtn = document.getElementById("signupBtn");
+
+      if (!email || !password || !nickname) {
+        alert("모든 항목을 입력해 주세요.");
+        return;
+      }
+
+      if (password !== passwordConfirm) {
+        alert("비밀번호가 서로 일치하지 않습니다.");
+        return;
+      }
+
+      signupBtn.disabled = true;
+      signupBtn.innerText = "가입 처리 중...";
+
+      const payload = {
+        action: "signup",
+        email: email,
+        password: password,
+        nickname: nickname
+      };
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (result.status === "success") {
+          alert("회원가입이 완료되었습니다! 자동 로그인되어 달력으로 이동합니다.");
+          // 로그인 사용자 정보 저장
+          localStorage.setItem("logged_in_user", JSON.stringify(result.user));
+          window.location.href = "calendar.html";
+        } else {
+          alert("가입 실패: " + (result.message || "오류가 발생했습니다."));
+          signupBtn.disabled = false;
+          signupBtn.innerText = "가입 완료하기";
+        }
+      } catch (err) {
+        console.error(err);
+        alert("네트워크 연결 중 오류가 발생했습니다.");
+        signupBtn.disabled = false;
+        signupBtn.innerText = "가입 완료하기";
+      }
+    }
+  </script>
+
+</body>
+</html>
