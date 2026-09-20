@@ -221,25 +221,6 @@
           <div class="loading-notice">운동 기록을 불러오는 중입니다...</div>
         </div>
       </div>
-
-      <!-- 선택된 날짜 댓글 섹션 -->
-      <div class="card">
-        <div class="comment-section-title">💬 운동 응원 & 한마디</div>
-
-        <!-- 댓글 작성 폼 -->
-        <div class="comment-form">
-          <div class="comment-row">
-            <input type="text" id="commentAuthorInput" class="input-comment-author" placeholder="작성자">
-            <input type="text" id="commentTextInput" class="input-comment-text" placeholder="오늘 운동 응원이나 피드백을 남겨보세요!">
-          </div>
-          <button type="button" class="btn-comment-submit" id="commentSubmitBtn" onclick="submitComment()">댓글 등록</button>
-        </div>
-
-        <!-- 댓글 목록 -->
-        <div id="commentList" class="comment-list">
-          <div class="loading-notice">댓글을 불러오는 중입니다...</div>
-        </div>
-      </div>
     </div>
 
     <!-- 선택된 날짜를 가지고 작성 페이지로 이동 -->
@@ -247,7 +228,8 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx5BT5Ib11Ah0wLYxfiaBRYZ6UDzmSeUHXSDl7as0WpvAzZ0GH6mCBoseUakhfMFU-6/exec";
+    // Vercel 서버리스 함수 주소로 연동
+    const SCRIPT_URL = "/api/posts";
 
     let currentDate = new Date();
     let selectedDateStr = formatDateKey(currentDate);
@@ -264,14 +246,10 @@
       window.location.href = `write.html?date=${selectedDateStr}`;
     }
 
-    // 로그인 정보 불러와 닉네임 자동 세팅
     function initUserHeader() {
       const loggedUser = JSON.parse(localStorage.getItem("logged_in_user"));
       if (loggedUser && loggedUser.nickname) {
         document.getElementById("appTitle").innerText = `${loggedUser.nickname}의 운동 달력`;
-        document.getElementById("commentAuthorInput").value = loggedUser.nickname;
-      } else {
-        document.getElementById("commentAuthorInput").value = "익명";
       }
     }
 
@@ -302,7 +280,6 @@
         document.getElementById("goalDays").innerText = "진행 중";
       }
 
-      // 이번 주 (월~일) 달성 일수 계산
       const now = new Date();
       const currentDay = now.getDay();
       const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay;
@@ -333,6 +310,7 @@
       document.getElementById("goalProgressBar").style.width = `${percent}%`;
     }
 
+    // 노션 데이터베이스에서 운동 기록 불러오기
     async function loadRecords() {
       try {
         const response = await fetch(SCRIPT_URL);
@@ -348,87 +326,6 @@
       } catch (err) {
         console.error(err);
         document.getElementById("recordList").innerHTML = '<div class="loading-notice">데이터를 불러오는 중 오류가 발생했습니다.</div>';
-      }
-    }
-
-    async function loadComments(dateStr) {
-      const container = document.getElementById("commentList");
-      container.innerHTML = '<div class="loading-notice">댓글을 불러오는 중입니다...</div>';
-
-      try {
-        const response = await fetch(`${SCRIPT_URL}?action=getComments&date=${dateStr}`);
-        const result = await response.json();
-
-        if (result.status === "success") {
-          const comments = result.data || [];
-          if (comments.length === 0) {
-            container.innerHTML = '<div class="loading-notice" style="padding: 10px 0;">작성된 댓글이 없습니다. 첫 댓글을 남겨보세요!</div>';
-            return;
-          }
-
-          container.innerHTML = comments.map(c => `
-            <div class="comment-item">
-              <div class="comment-meta">
-                <span class="comment-author">${c.author}</span>
-                <span>${c.createdAt}</span>
-              </div>
-              <div class="comment-content">${c.content.replace(/\n/g, '<br>')}</div>
-            </div>
-          `).join("");
-        } else {
-          container.innerHTML = '<div class="loading-notice">댓글 목록을 불러오지 못했습니다.</div>';
-        }
-      } catch (err) {
-        console.error(err);
-        container.innerHTML = '<div class="loading-notice">댓글 로딩 중 오류가 발생했습니다.</div>';
-      }
-    }
-
-    async function submitComment() {
-      const authorInput = document.getElementById("commentAuthorInput");
-      const textInput = document.getElementById("commentTextInput");
-      const submitBtn = document.getElementById("commentSubmitBtn");
-
-      const author = authorInput.value.trim() || "익명";
-      const content = textInput.value.trim();
-
-      if (!content) {
-        alert("댓글 내용을 입력해 주세요.");
-        return;
-      }
-
-      submitBtn.disabled = true;
-      submitBtn.innerText = "등록 중...";
-
-      const payload = {
-        action: "addComment",
-        date: selectedDateStr,
-        author: author,
-        content: content
-      };
-
-      try {
-        const response = await fetch(SCRIPT_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "text/plain;charset=utf-8"
-          },
-          body: JSON.stringify(payload)
-        });
-
-        const result = await response.json();
-        if (result.status === "success") {
-          textInput.value = "";
-          loadComments(selectedDateStr);
-        } else {
-          alert("댓글 저장 실패: " + (result.message || "오류"));
-        }
-      } catch (err) {
-        console.error(err);
-        alert("댓글 전송 중 오류가 발생했습니다.");
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerText = "댓글 등록";
       }
     }
 
@@ -482,7 +379,6 @@
           selectedDateStr = cellDateStr;
           renderCalendar();
           renderDailyRecords(cellDateStr);
-          loadComments(cellDateStr);
         };
 
         daysContainer.appendChild(cell);
@@ -519,7 +415,6 @@
     initUserHeader();
     updateGoalBanner();
     loadRecords();
-    loadComments(selectedDateStr);
   </script>
 
 </body>

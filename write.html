@@ -53,12 +53,13 @@
       </div>
 
       <!-- 저장 버튼 -->
-      <button type="button" class="btn-primary" id="saveBtn" onclick="saveRecord()">스프레드시트에 저장하기</button>
+      <button type="button" class="btn-primary" id="saveBtn" onclick="saveRecord()">노션에 저장하기</button>
     </div>
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx5BT5Ib11Ah0wLYxfiaBRYZ6UDzmSeUHXSDl7as0WpvAzZ0GH6mCBoseUakhfMFU-6/exec";
+    // Vercel 서버리스 함수 주소로 연동
+    const SCRIPT_URL = "/api/posts";
 
     let selectedType = "웨이트";
     let selectedDuration = "1시간";
@@ -105,10 +106,9 @@
       };
 
       saveBtn.disabled = true;
-      saveBtn.innerText = "시트에 저장하는 중...";
+      saveBtn.innerText = "노션에 저장하는 중...";
 
       const payload = {
-        action: "addRecord",
         date: workoutDate,
         goal: savedGoals.shortTitle,
         type: selectedType,
@@ -120,7 +120,7 @@
         const response = await fetch(SCRIPT_URL, {
           method: "POST",
           headers: {
-            "Content-Type": "text/plain;charset=utf-8"
+            "Content-Type": "application/json"
           },
           body: JSON.stringify(payload)
         });
@@ -128,18 +128,18 @@
         const result = await response.json();
 
         if (result.status === "success") {
-          alert(`${workoutDate} 기록이 저장되었습니다!`);
+          alert(`${workoutDate} 기록이 노션에 저장되었습니다!`);
           window.location.href = "calendar.html";
         } else {
           alert("저장 실패: " + (result.message || "오류가 발생했습니다."));
           saveBtn.disabled = false;
-          saveBtn.innerText = "스프레드시트에 저장하기";
+          saveBtn.innerText = "노션에 저장하기";
         }
       } catch (err) {
         console.error(err);
         alert("네트워크 연결 중 오류가 발생했습니다.");
         saveBtn.disabled = false;
-        saveBtn.innerText = "스프레드시트에 저장하기";
+        saveBtn.innerText = "노션에 저장하기";
       }
     }
   </script>
