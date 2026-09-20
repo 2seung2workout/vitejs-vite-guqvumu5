@@ -170,9 +170,9 @@
     }
     .loading-notice {
       text-align: center;
-      padding: 20px;
+      padding: 16px;
       color: #8c827a;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
     }
   </style>
 </head>
@@ -185,7 +185,7 @@
     </header>
 
     <div class="content-area">
-      <!-- 상단 목표 배너 (클릭 시 목표 수정 페이지로 이동) -->
+      <!-- 상단 목표 배너 -->
       <div class="goal-card" onclick="location.href='goals.html'" title="누르면 목표를 수정할 수 있습니다">
         <div class="goal-header">
           <span class="goal-tag">단기 목표</span>
@@ -208,16 +208,33 @@
           <span id="calendarTitle">월간 달력</span>
           <button type="button" class="month-nav-btn" onclick="changeMonth(1)">&gt;</button>
         </div>
-        <div class="cal-grid" id="calendarDays">
-          <!-- 스크립트로 날짜 생성 -->
-        </div>
+        <div class="cal-grid" id="calendarDays"></div>
       </div>
 
       <!-- 선택된 날짜 운동 목록 -->
       <div class="card">
         <div class="daily-card-title" id="selectedDateTitle">운동 기록</div>
         <div id="recordList">
-          <div class="loading-notice">시트에서 운동 기록을 불러오는 중입니다...</div>
+          <div class="loading-notice">운동 기록을 불러오는 중입니다...</div>
+        </div>
+      </div>
+
+      <!-- 선택된 날짜 댓글 섹션 -->
+      <div class="card">
+        <div class="comment-section-title">💬 운동 응원 & 한마디</div>
+
+        <!-- 댓글 작성 폼 -->
+        <div class="comment-form">
+          <div class="comment-row">
+            <input type="text" id="commentAuthorInput" class="input-comment-author" placeholder="작성자" value="익명">
+            <input type="text" id="commentTextInput" class="input-comment-text" placeholder="오늘 운동 응원이나 피드백을 남겨보세요!">
+          </div>
+          <button type="button" class="btn-comment-submit" id="commentSubmitBtn" onclick="submitComment()">댓글 등록</button>
+        </div>
+
+        <!-- 댓글 목록 -->
+        <div id="commentList" class="comment-list">
+          <div class="loading-notice">댓글을 불러오는 중입니다...</div>
         </div>
       </div>
     </div>
@@ -227,8 +244,8 @@
   </div>
 
   <script>
-    // 변경된 신규 웹 앱 배포 주소
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxuKMrkrj_pIbclU_gSRAgZMAac6C1r0qBsP2QA30ghC5VJYcRvF1nG8XkbYOlqEFM/exec";
+    // 배포된 최신 웹앱 URL
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxclFgL4LZG160j0RZhwaQnAe7wxxduHQcGs-9AAhVErFLfcnDR2zL9BzAp0p9nbk_v/exec";
 
     let currentDate = new Date();
     let selectedDateStr = formatDateKey(currentDate);
@@ -251,7 +268,6 @@
 
       document.getElementById("displayGoalTitle").innerText = savedGoals.shortTitle;
 
-      // 마감일 D-Day 계산
       if (savedGoals.endDate) {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -270,7 +286,7 @@
         document.getElementById("goalDays").innerText = "진행 중";
       }
 
-      // 이번 주 (월~일) 운동 일수 계산
+      // 이번 주 (월~일) 달성 일수 계산
       const now = new Date();
       const currentDay = now.getDay();
       const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay;
@@ -301,7 +317,7 @@
       document.getElementById("goalProgressBar").style.width = `${percent}%`;
     }
 
-    // 시트에서 [운동 목표, 날짜, 운동 종류, 운동 시간, 내용] 불러오기
+    // 1번째 시트: 전체 운동 기록 불러오기
     async function loadRecords() {
       try {
         const response = await fetch(SCRIPT_URL);
@@ -317,6 +333,89 @@
       } catch (err) {
         console.error(err);
         document.getElementById("recordList").innerHTML = '<div class="loading-notice">데이터를 불러오는 중 오류가 발생했습니다.</div>';
+      }
+    }
+
+    // 2번째 시트: 선택된 날짜의 댓글 목록 불러오기
+    async function loadComments(dateStr) {
+      const container = document.getElementById("commentList");
+      container.innerHTML = '<div class="loading-notice">댓글을 불러오는 중입니다...</div>';
+
+      try {
+        const response = await fetch(`${SCRIPT_URL}?action=getComments&date=${dateStr}`);
+        const result = await response.json();
+
+        if (result.status === "success") {
+          const comments = result.data || [];
+          if (comments.length === 0) {
+            container.innerHTML = '<div class="loading-notice" style="padding: 10px 0;">작성된 댓글이 없습니다. 첫 댓글을 남겨보세요!</div>';
+            return;
+          }
+
+          container.innerHTML = comments.map(c => `
+            <div class="comment-item">
+              <div class="comment-meta">
+                <span class="comment-author">${c.author}</span>
+                <span>${c.createdAt}</span>
+              </div>
+              <div class="comment-content">${c.content.replace(/\n/g, '<br>')}</div>
+            </div>
+          `).join("");
+        } else {
+          container.innerHTML = '<div class="loading-notice">댓글 목록을 불러오지 못했습니다.</div>';
+        }
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = '<div class="loading-notice">댓글 로딩 중 오류가 발생했습니다.</div>';
+      }
+    }
+
+    // 댓글 저장하기 (doPost 호출)
+    async function submitComment() {
+      const authorInput = document.getElementById("commentAuthorInput");
+      const textInput = document.getElementById("commentTextInput");
+      const submitBtn = document.getElementById("commentSubmitBtn");
+
+      const author = authorInput.value.trim() || "익명";
+      const content = textInput.value.trim();
+
+      if (!content) {
+        alert("댓글 내용을 입력해 주세요.");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.innerText = "등록 중...";
+
+      const payload = {
+        action: "addComment",
+        date: selectedDateStr,
+        author: author,
+        content: content
+      };
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        if (result.status === "success") {
+          textInput.value = "";
+          loadComments(selectedDateStr); // 댓글 새로고침
+        } else {
+          alert("댓글 저장 실패: " + (result.message || "오류"));
+        }
+      } catch (err) {
+        console.error(err);
+        alert("댓글 전송 중 오류가 발생했습니다.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "댓글 등록";
       }
     }
 
@@ -370,6 +469,7 @@
           selectedDateStr = cellDateStr;
           renderCalendar();
           renderDailyRecords(cellDateStr);
+          loadComments(cellDateStr);
         };
 
         daysContainer.appendChild(cell);
@@ -403,8 +503,10 @@
       renderCalendar();
     }
 
+    // 초기 실행
     updateGoalBanner();
     loadRecords();
+    loadComments(selectedDateStr);
   </script>
 
 </body>

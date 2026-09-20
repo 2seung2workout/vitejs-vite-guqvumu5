@@ -56,8 +56,8 @@
   </div>
 
   <script>
-    // 변경된 신규 웹 앱 배포 주소
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxuKMrkrj_pIbclU_gSRAgZMAac6C1r0qBsP2QA30ghC5VJYcRvF1nG8XkbYOlqEFM/exec";
+    // 배포된 최신 웹앱 URL
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxclFgL4LZG160j0RZhwaQnAe7wxxduHQcGs-9AAhVErFLfcnDR2zL9BzAp0p9nbk_v/exec";
 
     let selectedType = "웨이트";
     let selectedDuration = "1시간";
@@ -85,8 +85,8 @@
       saveBtn.disabled = true;
       saveBtn.innerText = "시트에 저장하는 중...";
 
-      // [운동 목표, 운동 종류, 시간, 내용] 전송
       const payload = {
+        action: "addRecord",
         goal: savedGoals.shortTitle,
         type: selectedType,
         duration: selectedDuration,
@@ -94,7 +94,6 @@
       };
 
       try {
-        // text/plain 방식으로 전송해 CORS 정책 차단 방지
         const response = await fetch(SCRIPT_URL, {
           method: "POST",
           headers: {
