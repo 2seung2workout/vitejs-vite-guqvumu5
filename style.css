@@ -152,6 +152,12 @@ body {
   box-shadow: 0 4px 12px rgba(224, 109, 83, 0.25);
 }
 
+.btn-primary:disabled {
+  background-color: #d1c7bd;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
 .btn-secondary {
   display: block;
   width: 100%;

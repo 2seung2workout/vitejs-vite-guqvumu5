@@ -6,7 +6,6 @@
   <title>2seung2workout - 달력</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* 상단 목표 배너 */
     .goal-card {
       background: linear-gradient(135deg, #fff8f5 0%, #fff0eb 100%);
       border: 1px solid #fcded6;
@@ -55,7 +54,6 @@
       color: #8c7b74;
     }
 
-    /* 캘린더 그리드 */
     .calendar-card {
       background: #ffffff;
       border-radius: 16px;
@@ -70,6 +68,15 @@
       margin-bottom: 14px;
       font-weight: 700;
       font-size: 1.05rem;
+    }
+    .month-nav-btn {
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #554f49;
+      padding: 4px 10px;
     }
     .cal-grid {
       display: grid;
@@ -93,11 +100,15 @@
       font-size: 0.88rem;
       font-weight: 600;
       color: #403a35;
+      cursor: pointer;
       position: relative;
     }
-    .cal-cell.empty { color: #d0c8c0; }
-    .cal-cell.today {
-      background-color: #f7f3ee;
+    .cal-cell.empty {
+      cursor: default;
+      color: #d0c8c0;
+    }
+    .cal-cell.selected {
+      background-color: #fcefe9;
       border: 1.5px solid #e06d53;
       color: #e06d53;
     }
@@ -108,10 +119,7 @@
       background-color: #e06d53;
       margin-top: 3px;
     }
-    .dot-badge.weight { background-color: #e06d53; }
-    .dot-badge.run { background-color: #55a868; }
 
-    /* 하단 일자별 요약 카드 */
     .daily-card-title {
       font-size: 0.95rem;
       font-weight: 700;
@@ -146,115 +154,186 @@
       color: #7d736b;
       line-height: 1.4;
     }
+    .loading-notice {
+      text-align: center;
+      padding: 20px;
+      color: #8c827a;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
 
   <div class="app-container">
-    <!-- 헤더 -->
     <header class="app-header">
       <h1>2seung2workout</h1>
       <a href="goals.html" class="header-link">목표 설정</a>
     </header>
 
     <div class="content-area">
-      <!-- 상단 목표 배너 카드 (단기 & 장기) -->
+      <!-- 상단 목표 배너 -->
       <div class="goal-card">
         <div class="goal-header">
           <span class="goal-tag">단기 목표</span>
-          <span style="font-size: 0.8rem; color: #8c7b74;">D-22</span>
+          <span id="goalDays">진행 중</span>
         </div>
         <div class="goal-title">2달 동안 주 4일 30분 조깅 🏃</div>
         <div class="progress-bar-bg">
           <div class="progress-bar-fill"></div>
         </div>
         <div class="goal-stats">
-          <span>이번 주 3회 완료 / 4회 목표</span>
-          <span style="font-weight: 700; color: #e06d53;">75% 달성</span>
+          <span>이번 주 루틴 달성 중</span>
+          <span style="font-weight: 700; color: #e06d53;">달성 진행중</span>
         </div>
       </div>
 
-      <!-- 월간 캘린더 예시 (9월 기준) -->
+      <!-- 월간 달력 -->
       <div class="calendar-card">
         <div class="calendar-month-bar">
-          <span style="cursor: pointer;">&lt;</span>
-          <span>9월</span>
-          <span style="cursor: pointer;">&gt;</span>
+          <button type="button" class="month-nav-btn" onclick="changeMonth(-1)">&lt;</button>
+          <span id="calendarTitle">2026년 9월</span>
+          <button type="button" class="month-nav-btn" onclick="changeMonth(1)">&gt;</button>
         </div>
-        <div class="cal-grid">
-          <div class="cal-header-day" style="color: #d9534f;">일</div>
-          <div class="cal-header-day">월</div>
-          <div class="cal-header-day">화</div>
-          <div class="cal-header-day">수</div>
-          <div class="cal-header-day">목</div>
-          <div class="cal-header-day">금</div>
-          <div class="cal-header-day" style="color: #4a90e2;">토</div>
-
-          <!-- 1주차 -->
-          <div class="cal-cell empty">30</div>
-          <div class="cal-cell empty">31</div>
-          <div class="cal-cell">1</div>
-          <div class="cal-cell">2</div>
-          <div class="cal-cell">3</div>
-          <div class="cal-cell">4</div>
-          <div class="cal-cell">5</div>
-
-          <!-- 2주차 -->
-          <div class="cal-cell">6</div>
-          <div class="cal-cell">7</div>
-          <div class="cal-cell">8</div>
-          <div class="cal-cell">9</div>
-          <div class="cal-cell">10</div>
-          <div class="cal-cell">11</div>
-          <div class="cal-cell">12</div>
-
-          <!-- 3주차 (기록 예시) -->
-          <div class="cal-cell">13</div>
-          <div class="cal-cell">14<div class="dot-badge run"></div></div>
-          <div class="cal-cell">15</div>
-          <div class="cal-cell">16<div class="dot-badge weight"></div></div>
-          <div class="cal-cell">17</div>
-          <div class="cal-cell">18<div class="dot-badge run"></div></div>
-          <div class="cal-cell">19</div>
-
-          <!-- 4주차 (오늘 및 기록 예시) -->
-          <div class="cal-cell today">20<div class="dot-badge weight"></div></div>
-          <div class="cal-cell">21</div>
-          <div class="cal-cell">22</div>
-          <div class="cal-cell">23</div>
-          <div class="cal-cell">24</div>
-          <div class="cal-cell">25</div>
-          <div class="cal-cell">26</div>
+        <div class="cal-grid" id="calendarDays">
+          <!-- 스크립트로 생성 -->
         </div>
       </div>
 
-      <!-- 선택된 일자 운동 목록 (예시 2개 표시) -->
+      <!-- 선택된 일자 운동 목록 -->
       <div class="card">
-        <div class="daily-card-title">오늘(20일)의 운동 기록</div>
-        
-        <!-- 예시 1: 웨이트 트레이닝 -->
-        <div class="record-item">
-          <div class="record-type-pill">웨이트</div>
-          <div class="record-body">
-            <h4>1시간 소요</h4>
-            <p>하체 및 코어 집중 루틴 (스쿼트, 런지 세트 완료). 컨디션 좋음!</p>
-          </div>
-        </div>
-
-        <!-- 예시 2: 러닝/조깅 -->
-        <div class="record-item">
-          <div class="record-type-pill" style="background:#eaf6ed; color:#2d8847;">러닝</div>
-          <div class="record-body">
-            <h4>30분 소요</h4>
-            <p>공원 트랙 3km 가벼운 인터벌 조깅 마무리.</p>
-          </div>
+        <div class="daily-card-title" id="selectedDateTitle">운동 기록</div>
+        <div id="recordList">
+          <div class="loading-notice">시트에서 운동 기록을 불러오는 중입니다...</div>
         </div>
       </div>
     </div>
 
-    <!-- 운동 작성 화면으로 이동하는 + 버튼 -->
+    <!-- 작성 화면으로 이동 -->
     <a href="write.html" class="fab-btn" title="운동 기록하기">+</a>
   </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzmr5ybQpeF1FquhjwDkotDXTSLfta90jfDuP-tL28fWJEzgFOoi-XBg4xamYh3GIqQ/exec";
+
+    let currentDate = new Date();
+    let selectedDateStr = formatDateKey(currentDate);
+    let allRecords = [];
+
+    function formatDateKey(dateObj) {
+      const y = dateObj.getFullYear();
+      const m = ("0" + (dateObj.getMonth() + 1)).slice(-2);
+      const d = ("0" + dateObj.getDate()).slice(-2);
+      return `${y}-${m}-${d}`;
+    }
+
+    // Google 스프레드시트에서 기록 불러오기 (GET)
+    async function loadRecords() {
+      try {
+        const response = await fetch(SCRIPT_URL);
+        const result = await response.json();
+        if (result.status === "success") {
+          allRecords = result.data || [];
+          renderCalendar();
+          renderDailyRecords(selectedDateStr);
+        } else {
+          document.getElementById("recordList").innerHTML = '<div class="loading-notice">기록을 불러오지 못했습니다.</div>';
+        }
+      } catch (err) {
+        console.error(err);
+        document.getElementById("recordList").innerHTML = '<div class="loading-notice">데이터를 불러오는 중 오류가 발생했습니다.</div>';
+      }
+    }
+
+    function renderCalendar() {
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+
+      document.getElementById("calendarTitle").innerText = `${year}년 ${month + 1}월`;
+
+      const firstDayIndex = new Date(year, month, 1).getDay();
+      const lastDay = new Date(year, month + 1, 0).getDate();
+
+      const daysContainer = document.getElementById("calendarDays");
+      daysContainer.innerHTML = "";
+
+      // 요일 헤더
+      const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
+      dayNames.forEach((name, idx) => {
+        const col = document.createElement("div");
+        col.className = "cal-header-day";
+        if (idx === 0) col.style.color = "#d9534f";
+        if (idx === 6) col.style.color = "#4a90e2";
+        col.innerText = name;
+        daysContainer.appendChild(col);
+      });
+
+      // 시작 빈칸
+      for (let i = 0; i < firstDayIndex; i++) {
+        const emptyCell = document.createElement("div");
+        emptyCell.className = "cal-cell empty";
+        daysContainer.appendChild(emptyCell);
+      }
+
+      // 날짜 채우기
+      for (let day = 1; day <= lastDay; day++) {
+        const cell = document.createElement("div");
+        cell.className = "cal-cell";
+        cell.innerText = day;
+
+        const cellDateStr = `${year}-${("0" + (month + 1)).slice(-2)}-${("0" + day).slice(-2)}`;
+
+        // 오늘이나 선택된 날짜 강조
+        if (cellDateStr === selectedDateStr) {
+          cell.classList.add("selected");
+        }
+
+        // 해당 날짜에 저장된 기록이 있으면 점 뱃지 추가
+        const hasRecord = allRecords.some(r => r.date === cellDateStr);
+        if (hasRecord) {
+          const dot = document.createElement("div");
+          dot.className = "dot-badge";
+          cell.appendChild(dot);
+        }
+
+        cell.onclick = () => {
+          selectedDateStr = cellDateStr;
+          renderCalendar();
+          renderDailyRecords(cellDateStr);
+        };
+
+        daysContainer.appendChild(cell);
+      }
+    }
+
+    function renderDailyRecords(dateStr) {
+      document.getElementById("selectedDateTitle").innerText = `${dateStr} 운동 기록`;
+      const filtered = allRecords.filter(r => r.date === dateStr);
+      const container = document.getElementById("recordList");
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="loading-notice" style="padding: 16px 0;">이 날짜에 작성된 운동 기록이 없습니다.</div>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => `
+        <div class="record-item">
+          <div class="record-type-pill">${item.type || '운동'}</div>
+          <div class="record-body">
+            <h4>${item.duration || '시간 미지정'}</h4>
+            <p>${item.content ? item.content.replace(/\n/g, '<br>') : '기록된 메모가 없습니다.'}</p>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function changeMonth(diff) {
+      currentDate.setMonth(currentDate.getMonth() + diff);
+      renderCalendar();
+    }
+
+    // 화면 시작 시 자동 호출
+    loadRecords();
+  </script>
 
 </body>
 </html>
