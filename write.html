@@ -15,7 +15,6 @@
     </header>
 
     <div class="content-area">
-      <!-- 안내 문구 -->
       <p style="font-size: 0.85rem; color: #8c827a; margin-bottom: 18px;">
         💡 작성일은 오늘 날짜로 자동 등록됩니다.
       </p>
@@ -57,8 +56,8 @@
   </div>
 
   <script>
-    // 최신 웹 앱 배포 주소
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzS4j_oalsIfWYS6F8tPDBilbpdOAoWpdPoe1ONfV0kJtBxXIqU3NVMJQ0gFYudcaIA/exec";
+    // 변경된 신규 웹 앱 배포 주소
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxuKMrkrj_pIbclU_gSRAgZMAac6C1r0qBsP2QA30ghC5VJYcRvF1nG8XkbYOlqEFM/exec";
 
     let selectedType = "웨이트";
     let selectedDuration = "1시간";
@@ -79,7 +78,6 @@
       const content = document.getElementById("memoInput").value.trim();
       const saveBtn = document.getElementById("saveBtn");
 
-      // 브라우저에 저장되어 있는 현재 단기 목표 가져오기
       const savedGoals = JSON.parse(localStorage.getItem("user_workout_goals")) || {
         shortTitle: "2달 동안 주 4일 30분 조깅 🏃"
       };
@@ -87,7 +85,7 @@
       saveBtn.disabled = true;
       saveBtn.innerText = "시트에 저장하는 중...";
 
-      // 시트 열 순서에 맞춰 운동 목표, 운동 종류, 시간, 내용 전송 (작성일은 서버 자동 부여)
+      // [운동 목표, 운동 종류, 시간, 내용] 전송
       const payload = {
         goal: savedGoals.shortTitle,
         type: selectedType,
@@ -96,7 +94,7 @@
       };
 
       try {
-        // CORS 방지를 위해 text/plain 타입으로 전송
+        // text/plain 방식으로 전송해 CORS 정책 차단 방지
         const response = await fetch(SCRIPT_URL, {
           method: "POST",
           headers: {
