@@ -18,23 +18,26 @@
       <!-- 단기 목표 설정 -->
       <div class="card">
         <div class="form-group">
-          <label class="form-label">단기 목표 (1~2달 집중)</label>
-          <input type="text" class="input-text" value="2달 동안 주 4일 30분 조깅">
+          <label class="form-label">단기 목표</label>
+          <input type="text" id="shortGoalTitle" class="input-text" placeholder="예: 2달 동안 주 4일 30분 조깅">
         </div>
 
         <div class="form-group">
-          <label class="form-label">주간 목표 횟수</label>
-          <div class="chip-group">
-            <button type="button" class="chip-btn">주 2일</button>
-            <button type="button" class="chip-btn">주 3일</button>
-            <button type="button" class="chip-btn active">주 4일</button>
-            <button type="button" class="chip-btn">주 5일</button>
+          <label class="form-label">주간 목표 운동 일수</label>
+          <div class="chip-group" id="targetDaysGroup">
+            <button type="button" class="chip-btn" onclick="selectWeeklyDays(this, 1)">주 1일</button>
+            <button type="button" class="chip-btn" onclick="selectWeeklyDays(this, 2)">주 2일</button>
+            <button type="button" class="chip-btn" onclick="selectWeeklyDays(this, 3)">주 3일</button>
+            <button type="button" class="chip-btn" onclick="selectWeeklyDays(this, 4)">주 4일</button>
+            <button type="button" class="chip-btn" onclick="selectWeeklyDays(this, 5)">주 5일</button>
+            <button type="button" class="chip-btn" onclick="selectWeeklyDays(this, 6)">주 6일</button>
+            <button type="button" class="chip-btn" onclick="selectWeeklyDays(this, 7)">주 7일</button>
           </div>
         </div>
 
         <div class="form-group" style="margin-bottom: 0;">
-          <label class="form-label">목표 종료일</label>
-          <input type="date" class="input-text" value="2026-10-31">
+          <label class="form-label">목표 마감일</label>
+          <input type="date" id="goalEndDate" class="input-text">
         </div>
       </div>
 
@@ -42,14 +45,67 @@
       <div class="card">
         <div class="form-group" style="margin-bottom: 0;">
           <label class="form-label">장기 목표 (연간 / 최종 지향)</label>
-          <textarea class="input-textarea" style="min-height: 80px;" placeholder="예: 체지방률 5% 감량하기, 10km 마라톤 완주하기">올해 하반기 10km 마라톤 대회 완주 및 주 4회 꾸준한 운동 습관 유지하기</textarea>
+          <textarea id="longGoalTitle" class="input-textarea" style="min-height: 80px;" placeholder="예: 체지방률 5% 감량하기, 10km 마라톤 완주하기"></textarea>
         </div>
       </div>
 
       <!-- 저장 버튼 -->
-      <a href="calendar.html" class="btn-primary">목표 저장하고 달력 보기</a>
+      <button type="button" class="btn-primary" onclick="saveGoals()">목표 저장하고 달력 보기</button>
     </div>
   </div>
+
+  <script>
+    let selectedDays = 4;
+
+    function selectWeeklyDays(btn, days) {
+      document.querySelectorAll("#targetDaysGroup .chip-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      selectedDays = days;
+    }
+
+    // 기존 저장된 목표값 불러오기
+    window.addEventListener("DOMContentLoaded", () => {
+      const savedGoals = JSON.parse(localStorage.getItem("user_workout_goals")) || {
+        shortTitle: "2달 동안 주 4일 30분 조깅 🏃",
+        targetDays: 4,
+        endDate: "2026-10-31",
+        longTitle: "올해 하반기 10km 마라톤 대회 완주 및 주 4회 꾸준한 운동 습관 유지하기"
+      };
+
+      document.getElementById("shortGoalTitle").value = savedGoals.shortTitle;
+      document.getElementById("goalEndDate").value = savedGoals.endDate;
+      document.getElementById("longGoalTitle").value = savedGoals.longTitle;
+      selectedDays = savedGoals.targetDays;
+
+      // 주간 횟수 버튼 활성화 상태 표시
+      const buttons = document.querySelectorAll("#targetDaysGroup .chip-btn");
+      buttons.forEach(btn => {
+        if (btn.innerText.includes(`${selectedDays}일`)) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+    });
+
+    // 목표 저장 후 달력으로 이동
+    function saveGoals() {
+      const shortTitle = document.getElementById("shortGoalTitle").value.trim() || "운동 목표";
+      const endDate = document.getElementById("goalEndDate").value;
+      const longTitle = document.getElementById("longGoalTitle").value.trim();
+
+      const goalData = {
+        shortTitle: shortTitle,
+        targetDays: selectedDays,
+        endDate: endDate,
+        longTitle: longTitle
+      };
+
+      localStorage.setItem("user_workout_goals", JSON.stringify(goalData));
+      alert("목표가 성공적으로 저장되었습니다!");
+      window.location.href = "calendar.html";
+    }
+  </script>
 
 </body>
 </html>

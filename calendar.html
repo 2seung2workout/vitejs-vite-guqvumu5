@@ -12,6 +12,7 @@
       border-radius: 16px;
       padding: 16px;
       margin-bottom: 16px;
+      cursor: pointer;
     }
     .goal-header {
       display: flex;
@@ -42,10 +43,11 @@
       margin-bottom: 6px;
     }
     .progress-bar-fill {
-      width: 75%;
+      width: 0%;
       height: 100%;
       background: #e06d53;
       border-radius: 4px;
+      transition: width 0.4s ease;
     }
     .goal-stats {
       display: flex;
@@ -171,19 +173,19 @@
     </header>
 
     <div class="content-area">
-      <!-- 상단 목표 배너 -->
-      <div class="goal-card">
+      <!-- 상단 목표 배너 (클릭 시 목표 수정 페이지로 이동) -->
+      <div class="goal-card" onclick="location.href='goals.html'" title="누르면 목표를 수정할 수 있습니다">
         <div class="goal-header">
           <span class="goal-tag">단기 목표</span>
-          <span id="goalDays">진행 중</span>
+          <span id="goalDays" style="font-size: 0.8rem; color: #8c7b74;">D-day</span>
         </div>
-        <div class="goal-title">2달 동안 주 4일 30분 조깅 🏃</div>
+        <div class="goal-title" id="displayGoalTitle">목표를 설정해주세요</div>
         <div class="progress-bar-bg">
-          <div class="progress-bar-fill"></div>
+          <div class="progress-bar-fill" id="goalProgressBar"></div>
         </div>
         <div class="goal-stats">
-          <span>이번 주 루틴 달성 중</span>
-          <span style="font-weight: 700; color: #e06d53;">달성 진행중</span>
+          <span id="weeklyCountText">이번 주 0회 완료 / 0회 목표</span>
+          <span id="goalPercentText" style="font-weight: 700; color: #e06d53;">0% 달성</span>
         </div>
       </div>
 
@@ -213,7 +215,6 @@
   </div>
 
   <script>
-    // 변경된 신규 웹 앱 배포 주소
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyKwazikG8IOsk2tcSBYErfY1IiEmKAfqsC0ftHxqL6LfFtTp9FCslz-D-RcGWx4Tyh/exec";
 
     let currentDate = new Date();
@@ -227,6 +228,67 @@
       return `${y}-${m}-${d}`;
     }
 
+    // 목표 설정값 및 이번 주 달성률 계산
+    function updateGoalBanner() {
+      const savedGoals = JSON.parse(localStorage.getItem("user_workout_goals")) || {
+        shortTitle: "2달 동안 주 4일 30분 조깅 🏃",
+        targetDays: 4,
+        endDate: "2026-10-31"
+      };
+
+      document.getElementById("displayGoalTitle").innerText = savedGoals.shortTitle;
+
+      // 마감일 D-Day 계산
+      if (savedGoals.endDate) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const end = new Date(savedGoals.endDate);
+        end.setHours(0, 0, 0, 0);
+        const diffDays = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
+
+        if (diffDays > 0) {
+          document.getElementById("goalDays").innerText = `D-${diffDays}`;
+        } else if (diffDays === 0) {
+          document.getElementById("goalDays").innerText = `D-Day (오늘 마감)`;
+        } else {
+          document.getElementById("goalDays").innerText = `종료`;
+        }
+      } else {
+        document.getElementById("goalDays").innerText = "진행 중";
+      }
+
+      // 이번 주 (월요일 ~ 일요일) 운동 일수 계산
+      const now = new Date();
+      const currentDay = now.getDay(); // 0: 일요일, 1: 월요일...
+      const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay;
+      const monday = new Date(now);
+      monday.setDate(now.getDate() + mondayOffset);
+      monday.setHours(0, 0, 0, 0);
+
+      const sunday = new Date(monday);
+      sunday.setDate(monday.getDate() + 6);
+      sunday.setHours(23, 59, 59, 999);
+
+      // 이번 주 범위 내에서 운동 기록이 있는 고유한 날짜 수 집계
+      const uniqueActiveDates = new Set();
+      allRecords.forEach(r => {
+        if (!r.date) return;
+        const rDate = new Date(r.date);
+        rDate.setHours(12, 0, 0, 0);
+        if (rDate >= monday && rDate <= sunday) {
+          uniqueActiveDates.add(r.date);
+        }
+      });
+
+      const completedDays = uniqueActiveDates.size;
+      const targetDays = Number(savedGoals.targetDays) || 4;
+      const percent = Math.min(100, Math.round((completedDays / targetDays) * 100));
+
+      document.getElementById("weeklyCountText").innerText = `이번 주 ${completedDays}일 완료 / ${targetDays}일 목표`;
+      document.getElementById("goalPercentText").innerText = `${percent}% 달성`;
+      document.getElementById("goalProgressBar").style.width = `${percent}%`;
+    }
+
     // 구글 시트에서 전체 기록 가져오기 (GET)
     async function loadRecords() {
       try {
@@ -236,6 +298,7 @@
           allRecords = result.data || [];
           renderCalendar();
           renderDailyRecords(selectedDateStr);
+          updateGoalBanner(); // 시트 기록 로드 완료 후 목표 달성률 갱신
         } else {
           document.getElementById("recordList").innerHTML = '<div class="loading-notice">기록을 불러오지 못했습니다.</div>';
         }
@@ -327,6 +390,8 @@
       renderCalendar();
     }
 
+    // 화면 시작 시 목표 먼저 그리고 시트 데이터 호출
+    updateGoalBanner();
     loadRecords();
   </script>
 
