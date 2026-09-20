@@ -63,7 +63,6 @@
       selectedDays = days;
     }
 
-    // 기존 저장된 목표값 불러오기
     window.addEventListener("DOMContentLoaded", () => {
       const savedGoals = JSON.parse(localStorage.getItem("user_workout_goals")) || {
         shortTitle: "2달 동안 주 4일 30분 조깅 🏃",
@@ -77,7 +76,6 @@
       document.getElementById("longGoalTitle").value = savedGoals.longTitle;
       selectedDays = savedGoals.targetDays;
 
-      // 주간 횟수 버튼 활성화 상태 표시
       const buttons = document.querySelectorAll("#targetDaysGroup .chip-btn");
       buttons.forEach(btn => {
         if (btn.innerText.includes(`${selectedDays}일`)) {
@@ -88,7 +86,6 @@
       });
     });
 
-    // 목표 저장 후 달력으로 이동
     function saveGoals() {
       const shortTitle = document.getElementById("shortGoalTitle").value.trim() || "운동 목표";
       const endDate = document.getElementById("goalEndDate").value;

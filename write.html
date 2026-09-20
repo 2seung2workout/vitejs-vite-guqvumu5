@@ -15,11 +15,13 @@
     </header>
 
     <div class="content-area">
-      <p style="font-size: 0.85rem; color: #8c827a; margin-bottom: 18px;">
-        💡 작성일은 오늘 날짜로 자동 등록됩니다.
-      </p>
+      <!-- 1. 운동 날짜 선택 -->
+      <div class="form-group">
+        <label class="form-label">운동 날짜 선택</label>
+        <input type="date" id="workoutDateInput" class="input-text">
+      </div>
 
-      <!-- 1. 운동 종류 (단추형) -->
+      <!-- 2. 운동 종류 (단추형) -->
       <div class="form-group">
         <label class="form-label">운동 종류</label>
         <div class="chip-group" id="typeGroup">
@@ -32,7 +34,7 @@
         </div>
       </div>
 
-      <!-- 2. 운동 시간 (30분 단위 단추) -->
+      <!-- 3. 운동 시간 (30분 단위 단추) -->
       <div class="form-group">
         <label class="form-label">운동 시간</label>
         <div class="chip-group" id="durationGroup">
@@ -44,7 +46,7 @@
         </div>
       </div>
 
-      <!-- 3. 세부 내용 -->
+      <!-- 4. 세부 내용 -->
       <div class="form-group">
         <label class="form-label">운동 내용 / 메모</label>
         <textarea id="memoInput" class="input-textarea" placeholder="루틴, 중량/세트, 오늘 몸 상태를 자유롭게 적어보세요."></textarea>
@@ -56,11 +58,25 @@
   </div>
 
   <script>
-    // 배포된 최신 웹앱 URL
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxclFgL4LZG160j0RZhwaQnAe7wxxduHQcGs-9AAhVErFLfcnDR2zL9BzAp0p9nbk_v/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVdFnwt-4KbG7JATKwgH3ySB_qVp3zAqxTk6cnlBAQDnQX-utjJtmGqqSPRGOH7frG/exec";
 
     let selectedType = "웨이트";
     let selectedDuration = "1시간";
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const paramDate = urlParams.get('date');
+
+      if (paramDate) {
+        document.getElementById("workoutDateInput").value = paramDate;
+      } else {
+        const today = new Date();
+        const y = today.getFullYear();
+        const m = ("0" + (today.getMonth() + 1)).slice(-2);
+        const d = ("0" + today.getDate()).slice(-2);
+        document.getElementById("workoutDateInput").value = `${y}-${m}-${d}`;
+      }
+    });
 
     function selectType(btn, val) {
       document.querySelectorAll("#typeGroup .chip-btn").forEach(b => b.classList.remove("active"));
@@ -75,8 +91,14 @@
     }
 
     async function saveRecord() {
+      const workoutDate = document.getElementById("workoutDateInput").value;
       const content = document.getElementById("memoInput").value.trim();
       const saveBtn = document.getElementById("saveBtn");
+
+      if (!workoutDate) {
+        alert("운동 날짜를 선택해 주세요.");
+        return;
+      }
 
       const savedGoals = JSON.parse(localStorage.getItem("user_workout_goals")) || {
         shortTitle: "2달 동안 주 4일 30분 조깅 🏃"
@@ -87,6 +109,7 @@
 
       const payload = {
         action: "addRecord",
+        date: workoutDate,
         goal: savedGoals.shortTitle,
         type: selectedType,
         duration: selectedDuration,
@@ -105,7 +128,7 @@
         const result = await response.json();
 
         if (result.status === "success") {
-          alert("저장되었습니다! 달력 화면으로 이동합니다.");
+          alert(`${workoutDate} 기록이 저장되었습니다!`);
           window.location.href = "calendar.html";
         } else {
           alert("저장 실패: " + (result.message || "오류가 발생했습니다."));

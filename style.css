@@ -199,7 +199,7 @@ body {
   }
 }
 
-/* 댓글 스타일 추가 */
+/* 댓글 스타일 */
 .comment-section-title {
   font-size: 0.95rem;
   font-weight: 700;
@@ -227,7 +227,7 @@ body {
 }
 
 .input-comment-author {
-  width: 100px;
+  width: 90px;
   padding: 10px 12px;
   border-radius: 8px;
   border: 1.5px solid #e8e2d8;

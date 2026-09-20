@@ -185,7 +185,7 @@
     </header>
 
     <div class="content-area">
-      <!-- 상단 목표 배너 -->
+      <!-- 상단 목표 배너 (클릭 시 목표 수정 화면으로 이동) -->
       <div class="goal-card" onclick="location.href='goals.html'" title="누르면 목표를 수정할 수 있습니다">
         <div class="goal-header">
           <span class="goal-tag">단기 목표</span>
@@ -239,13 +239,12 @@
       </div>
     </div>
 
-    <!-- 작성 화면으로 이동 -->
-    <a href="write.html" class="fab-btn" title="운동 기록하기">+</a>
+    <!-- 선택된 날짜를 가지고 작성 페이지로 이동 -->
+    <a href="javascript:goToWritePage()" class="fab-btn" title="운동 기록하기">+</a>
   </div>
 
   <script>
-    // 배포된 최신 웹앱 URL
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxclFgL4LZG160j0RZhwaQnAe7wxxduHQcGs-9AAhVErFLfcnDR2zL9BzAp0p9nbk_v/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVdFnwt-4KbG7JATKwgH3ySB_qVp3zAqxTk6cnlBAQDnQX-utjJtmGqqSPRGOH7frG/exec";
 
     let currentDate = new Date();
     let selectedDateStr = formatDateKey(currentDate);
@@ -258,7 +257,10 @@
       return `${y}-${m}-${d}`;
     }
 
-    // 목표 배너 및 이번 주 달성률 계산
+    function goToWritePage() {
+      window.location.href = `write.html?date=${selectedDateStr}`;
+    }
+
     function updateGoalBanner() {
       const savedGoals = JSON.parse(localStorage.getItem("user_workout_goals")) || {
         shortTitle: "2달 동안 주 4일 30분 조깅 🏃",
@@ -336,7 +338,7 @@
       }
     }
 
-    // 2번째 시트: 선택된 날짜의 댓글 목록 불러오기
+    // 2번째 시트: 댓글 불러오기
     async function loadComments(dateStr) {
       const container = document.getElementById("commentList");
       container.innerHTML = '<div class="loading-notice">댓글을 불러오는 중입니다...</div>';
@@ -370,7 +372,7 @@
       }
     }
 
-    // 댓글 저장하기 (doPost 호출)
+    // 댓글 등록
     async function submitComment() {
       const authorInput = document.getElementById("commentAuthorInput");
       const textInput = document.getElementById("commentTextInput");
@@ -406,7 +408,7 @@
         const result = await response.json();
         if (result.status === "success") {
           textInput.value = "";
-          loadComments(selectedDateStr); // 댓글 새로고침
+          loadComments(selectedDateStr);
         } else {
           alert("댓글 저장 실패: " + (result.message || "오류"));
         }
@@ -503,7 +505,6 @@
       renderCalendar();
     }
 
-    // 초기 실행
     updateGoalBanner();
     loadRecords();
     loadComments(selectedDateStr);
